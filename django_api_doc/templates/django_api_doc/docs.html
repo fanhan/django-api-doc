@@ -1,0 +1,72 @@
+{% load static %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>{% block title %}{% if name %}{{ name }} – {% endif %}Django API Document{% endblock %}</title>
+
+    {% block style %}
+        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/bootstrap.min.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/style.css" %}"/>
+    {% endblock %}
+</head>
+
+{% block body %}
+<body>
+    <div id="main">
+        <div class="sidebar span3">
+            <ul>
+                {% for url_name in url_names %}
+                <li {% if url_name == url_path %}class="active"{% endif %}>
+                    <a href="{{ doc_base_url }}{{ url_name }}">{{ url_name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="accordion" id="namespace">
+                {% for url_namespace in url_namespaces %}
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#namespace" href="#{{ url_namespace.name }}">{{ url_namespace.name }}</a>
+                    </div>
+                    <div id="{{ url_namespace.name }}" class="accordion-body collapse in">
+                        <div class="accordion-inner">
+                            <ul>
+                                {% for url_name in url_namespace.url_names %}
+                                <li {% if url_name.key == url_path %}class="active"{% endif %}>
+                                    <a href="{{ doc_base_url }}{{ url_name.key }}">{{ url_name.name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="content span12">
+            {% if doc %}
+                <h2>{{ doc.title }}</h2>
+                <p class="alert alert-info">{{ doc.url }}</p>
+                {% for item in doc.items %}
+                    <div>
+                        <div class="method">
+                            <span>Method: </span>
+                            <span class="label label-info">{{ item.method }}</span>
+                        </div>
+                        <pre class="doc">
+                        {{ item.content|safe }}
+                        </pre>
+                    </div>
+                {% endfor %}
+            {% else  %}
+                <h2>Welcome to django API document!</h2>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{% static "django_api_doc/js/jquery.js" %}"></script>
+    <script src="{% static "django_api_doc/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "django_api_doc/js/bootstrap-collapse.js" %}"></script>
+</body>
+{% endblock %}
+</html>

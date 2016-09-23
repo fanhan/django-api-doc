@@ -10,7 +10,8 @@ from django.core.urlresolvers import RegexURLPattern, reverse
 from django.http import Http404
 from django.utils.encoding import smart_unicode
 
-from .utils import resolve_urls
+from django_api_doc.utils import resolve_urls, get_url_pattern_by_name
+from django_api_doc import defaults as settings
 
 
 class APIDocView(View):
@@ -24,32 +25,36 @@ class APIDocView(View):
             'doc_base_url': doc_base_url,
             'url_path': url_path,
         }
+
+        # get all name and namespace by url conf
         url_patterns = urlresolvers.get_resolver().url_patterns
         for url_pattern in url_patterns:
-            if not hasattr(url_pattern, 'name') and not hasattr(url_pattern, 'namespace'):
-                continue
+            if hasattr(url_pattern, 'name') and url_pattern.name:
+                data['url_names'].append({
+                    'key': url_pattern.name,
+                    'name': url_pattern.name
+                })
+            elif hasattr(url_pattern, 'namespace') and url_pattern.namespace:
+                # if namespace in ignore namespaces setting
+                if url_pattern.namespace in settings.API_DOC_IGNORE_NAMESPACES:
+                    continue
 
-            if hasattr(url_pattern, 'namespace'):
+                # if namespace is api_doc's namespace
                 space_url = url_pattern.regex.pattern.replace('^', '/')
                 if space_url == doc_base_url:
                     continue
 
-            if hasattr(url_pattern, 'name') and url_pattern.name:
-                data['url_names'].append(url_pattern.name)
-            elif hasattr(url_pattern, 'namespace') and url_pattern.namespace:
                 url_names = resolve_urls(
                     url_pattern.urlconf_module.urlpatterns,
                     prefix=url_pattern.namespace,
-                    with_name=True
                 )
                 data['url_namespaces'].append({
                     'name': url_pattern.namespace,
-                    'url_names': [{'key': k, 'name': v} for k, v in url_names.iteritems()]
+                    'url_names': url_names
                 })
 
         if url_path:
-            url_pattern_dict = resolve_urls(url_patterns)
-            url_pattern = url_pattern_dict.get(url_path)
+            url_pattern = get_url_pattern_by_name(url_patterns, url_path)
             if not isinstance(url_pattern, RegexURLPattern):
                 raise Http404
 

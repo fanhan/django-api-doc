@@ -19,7 +19,7 @@
             <ul>
                 {% for url_name in url_names %}
                 <li {% if url_name == url_path %}class="active"{% endif %}>
-                    <a href="{{ doc_base_url }}{{ url_name }}">{{ url_name }}</a>
+                    <a href="{{ doc_base_url }}{{ url_name.key }}">{{ url_name.name }}</a>
                 </li>
                 {% endfor %}
             </ul>

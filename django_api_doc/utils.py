@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django_api_doc import defaults as settings
 
-def resolve_urls(url_patterns, prefix='', with_name=False):
+
+def resolve_urls(url_patterns, prefix=''):
     """
     resolve url
 
@@ -14,25 +16,49 @@ def resolve_urls(url_patterns, prefix='', with_name=False):
         url(r'^accounts/', include('apps.account.urls', namespace='accounts')),
 
     :return: {
-        'login': LoginView,
-        'signup': SignupView,
-        'logout': LogoutView,
-        'account-user_info': UserInfoView,
-        'account-like_user': LikeUserView,
+        'login': 'login',
+        'signup': 'signup,
+        'logout': 'logout',
+        'account-user_info': 'user_info',
+        'account-like_user': 'like_user',
     }
     """
-    data = {}
+    data = []
     for url_pattern in url_patterns:
-        if not hasattr(url_pattern, 'name') and not hasattr(url_pattern, 'namespace'):
-            continue
-
-        if hasattr(url_pattern, 'namespace') and url_pattern.namespace == 'django_api_doc':
-            continue
-
         if hasattr(url_pattern, 'name') and url_pattern.name:
             key = '%s-%s' % (prefix, url_pattern.name) if prefix else url_pattern.name
-            data[key] = url_pattern.name if with_name else url_pattern
-        else:
+            data.append({
+                'key': key,
+                'name': url_pattern.name
+            })
+        elif hasattr(url_pattern, 'namespace'):
+            if url_pattern.namespace in settings.API_DOC_IGNORE_NAMESPACES:
+                continue
+
             key = '%s-%s' % (prefix, url_pattern.namespace) if prefix else url_pattern.namespace
-            data.update(resolve_urls(url_pattern.urlconf_module.urlpatterns, prefix=key, with_name=with_name))
+            data.extend(resolve_urls(url_pattern.urlconf_module.urlpatterns, prefix=key))
     return data
+
+
+def get_url_pattern_by_name(url_patterns, name, prefix=''):
+    """
+    get url pattern by url name
+
+    :param url_patterns: url_patterns, eg: urlresolvers.get_resolver().url_patterns
+    :param name: url namespace + url name, eg: account-login
+    :param prefix: the prefix of key
+    :return: url_pattern
+    """
+    for url_pattern in url_patterns:
+        if hasattr(url_pattern, 'name') and url_pattern.name:
+            key = '%s-%s' % (prefix, url_pattern.name) if prefix else url_pattern.name
+            if key == name:
+                return url_pattern
+        elif hasattr(url_pattern, 'namespace'):
+            if url_pattern.namespace in settings.API_DOC_IGNORE_NAMESPACES:
+                continue
+
+            key = '%s-%s' % (prefix, url_pattern.namespace) if prefix else url_pattern.namespace
+            ret = get_url_pattern_by_name(url_pattern.urlconf_module.urlpatterns, name, prefix=key)
+            if ret:
+                return ret

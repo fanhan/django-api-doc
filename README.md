@@ -88,11 +88,5 @@ class TestIndexView(View):
 
 ```
 API_DOC_IGNORE_NAMESPACES = []   # 列表里的namespaces将不会生成文档
+API_DOC_TITLE = ''               # 文档的标题
 ```
-
-
-## 目前存在哪些问题
-
-1. 日志文档前端样式需要调整(考虑使用vuejs)
-2. url_pattern或者reverse得到url的方法不够好
-

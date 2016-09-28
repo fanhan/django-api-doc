@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import markdown
 import re
+import json
 
 from django.views.generic import View
 from django.shortcuts import render
 from django.core import urlresolvers
 from django.core.urlresolvers import RegexURLPattern, reverse
-from django.http import Http404
-from django.utils.encoding import smart_unicode
+from django.http import Http404, HttpResponse
 
 from django_api_doc.utils import resolve_urls, get_url_pattern_by_name
 from django_api_doc import defaults as settings
@@ -17,13 +16,45 @@ from django_api_doc import defaults as settings
 class APIDocView(View):
     template_name = 'django_api_doc/docs.html'
 
-    def get(self, request, url_path=''):
-        doc_base_url = request.get_full_path().strip(url_path)
+    def get(self, request):
+        return render(request, self.template_name, {})
+
+
+class MenuView(View):
+    """
+    Api doc menu
+    """
+
+    def get(self, request):
+        """
+        api doc menu
+
+        #### returns
+            {
+                "url_namespaces": [
+                    {
+                        "url_names": [
+                            {
+                                "key": "url_namespace_name-url_name",
+                                "name": "url_name"
+                            }
+                        ],
+                        "name": "url_namespace_name"
+                    }
+                ],
+                "url_names": [
+                    {
+                        "key": "url_name",
+                        "name": "url_name",
+                    }
+                ]
+            }
+        """
+        doc_base_url = request.get_full_path().replace('menu/', '')
         data = {
             'url_namespaces': [],
             'url_names': [],
-            'doc_base_url': doc_base_url,
-            'url_path': url_path,
+            'doc_title': settings.API_DOC_TITLE,
         }
 
         # get all name and namespace by url conf
@@ -52,41 +83,65 @@ class APIDocView(View):
                     'name': url_pattern.namespace,
                     'url_names': url_names
                 })
+        return HttpResponse(content=json.dumps(data), content_type='application/json')
 
-        if url_path:
-            url_pattern = get_url_pattern_by_name(url_patterns, url_path)
-            if not isinstance(url_pattern, RegexURLPattern):
-                raise Http404
 
-            view = url_pattern.callback.view_class
-            items = []
-            for method in view.http_method_names:
-                if method == 'options' or not hasattr(view, method):
-                    continue
+class DocContentView(View):
+    """
+    api doc content
+    """
+    def get(self, request, url_name):
+        """
+        api doc content
 
-                doc_item = []
-                for i in getattr(view, method).__doc__.split('\n'):
-                    doc_item.append(i[8:])
+        #### return
 
-                doc_content = '\n'.join(doc_item)
-                content = markdown.markdown(smart_unicode(doc_content), ['tables', 'attr_list'])
-                items.append({
-                    'method': method.upper(),
-                    'content': content,
-                })
-
-            try:
-                url = reverse(url_path.replace('-', ':'))
-            except Exception, e:
-                ret = re.findall('(?:pattern\(s\) tried: \[)(.+)(?:\])', e.__str__())
-                if ret:
-                    url = ret[0]
-                else:
-                    url = url_pattern.regex.pattern
-
-            data['doc'] = {
-                'title': view.__doc__ if view.__doc__ else view.__name__,
-                'url': url,
-                'items': items,
+            {
+                "title": "test",
+                "url": "/test/",
+                "items": [
+                    {
+                        "method": "POST",
+                        "content": "test"
+                    }
+                ]
             }
-        return render(request, self.template_name, data)
+        """
+        url_patterns = urlresolvers.get_resolver().url_patterns
+        url_pattern = get_url_pattern_by_name(url_patterns, url_name)
+        if not isinstance(url_pattern, RegexURLPattern):
+            raise Http404
+
+        view = url_pattern.callback.view_class
+        items = []
+        for method in view.http_method_names:
+            if method == 'options' or not hasattr(view, method):
+                continue
+
+            doc_item = []
+            for i in getattr(view, method).__doc__.split('\n'):
+                doc_item.append(i[8:])
+
+            doc_content = '\n'.join(doc_item)
+            items.append({
+                'method': method.upper(),
+                'content': doc_content,
+            })
+
+        try:
+            url = reverse(url_name.replace('--', ':'))
+        except Exception, e:
+            ret = re.findall('(?:pattern\(s\) tried: \[)(.+)(?:\])', e.__str__())
+            if ret:
+                url = ret[0]
+            else:
+                url = url_pattern.regex.pattern
+
+        doc_content = {
+            'title': view.__doc__ if view.__doc__ else view.__name__,
+            'url': url,
+            'items': items,
+        }
+        return HttpResponse(content=json.dumps(doc_content), content_type='application/json')
+
+

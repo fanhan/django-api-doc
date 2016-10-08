@@ -1,16 +1,16 @@
 # django-api-doc
 
-API docs for django
+一个基于django自动生成文档的项目
 
-## Installation
+## 如何安装
 
-Install using `pip`
+可以使用pip安装
 
 ```
 pip install django_api_doc
 ```
 
-or
+或者
 
 ```
 git clone git@github.com:fanhan/django-api-doc.git
@@ -21,9 +21,9 @@ python setup.py install
 
 ```
 
-## Example
+## 怎么使用
 
-Add `django_api_doc` to your INSTALLED_APPS setting.
+将`django_api_doc` 添加到settings中
 
 ```
 INSTALLED_APPS = (
@@ -32,7 +32,7 @@ INSTALLED_APPS = (
 )
 ```
 
-Now edit the your_project/urls.py module in your project:
+设置 url
 
 ```
 urlpatterns = [
@@ -41,7 +41,7 @@ urlpatterns = [
 ]
 ```
 
-In your project `urls.py`, you need set `name` or `namespace`
+在你的url.py里,需要把name,namespace写上
 
 ```
 urlpatterns = [
@@ -49,8 +49,7 @@ urlpatterns = [
     url(r'^common/', include('apps.test.urls', namespace='test')),
 ]
 ```
-
-In `your_apps/urls.py`, you can set urlpatterns like this...
+在apps/test/urls.py里
 
 ```
 urlpatterns = [
@@ -60,7 +59,7 @@ urlpatterns = [
 ```
 
 
-In `view.py`, please use the `markdown` to write comments
+在view.py里用markdown语法写注释
 
 ```python
 
@@ -75,9 +74,9 @@ class TestIndexView(View):
         
         #### 请求参数
         
-        params | category | must | description
+        字段 | 类型 | 必须 | 说明
         ---- | ---- | ---- | ----
-        null | null | null | null
+        无 | 无 | 无 | 无
         
         #### 返回值
             {
@@ -88,12 +87,12 @@ class TestIndexView(View):
         pass
 ```
 
-then, open the url `http://127.0.0.1:8000/api-docs/`, you can see 
+浏览器打开 `http://127.0.0.1:8000/api-docs/`就可以看到文档目录了
 
 
-## Add some parameters
+#### 新增一些参数
 
 ```
-API_DOC_IGNORE_NAMESPACES = []   # ignore your_project/urls.py namespaces
-API_DOC_TITLE = ''               # doc html title
+API_DOC_IGNORE_NAMESPACES = []   # 列表里的namespaces将不会生成文档
+API_DOC_TITLE = ''               # 文档的标题
 ```

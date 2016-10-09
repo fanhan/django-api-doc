@@ -73,13 +73,13 @@ class TestIndexView(View):
         """
         test index
         
-        #### 请求参数
+        #### Param
         
         params | category | must | description
         ---- | ---- | ---- | ----
         null | null | null | null
         
-        #### 返回值
+        #### Return
             {
                 "text": "test",
             }

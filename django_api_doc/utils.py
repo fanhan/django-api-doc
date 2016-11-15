@@ -62,3 +62,16 @@ def get_url_pattern_by_name(url_patterns, name, prefix=''):
             ret = get_url_pattern_by_name(url_pattern.urlconf_module.urlpatterns, name, prefix=key)
             if ret:
                 return ret
+
+
+def view_permission_check(user):
+    """
+    Check if user has permission to view document
+
+    :param user: User
+    :return: True or False
+    """
+    if settings.API_DOC_PERMISSION:
+        return user.has_perm(settings.API_DOC_PERMISSION)
+    else:
+        return True

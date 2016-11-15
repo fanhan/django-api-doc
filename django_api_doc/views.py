@@ -8,8 +8,10 @@ from django.shortcuts import render
 from django.core import urlresolvers
 from django.core.urlresolvers import RegexURLPattern, reverse
 from django.http import Http404, HttpResponse
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 
-from django_api_doc.utils import resolve_urls, get_url_pattern_by_name
+from django_api_doc.utils import resolve_urls, get_url_pattern_by_name, view_permission_check
 from django_api_doc import defaults as settings
 
 
@@ -25,6 +27,7 @@ class MenuView(View):
     Api doc menu
     """
 
+    @method_decorator(user_passes_test(view_permission_check))
     def get(self, request):
         """
         api doc menu
@@ -90,6 +93,8 @@ class DocContentView(View):
     """
     api doc content
     """
+
+    @method_decorator(user_passes_test(view_permission_check))
     def get(self, request, url_name):
         """
         api doc content

@@ -2,6 +2,7 @@
 
 import re
 import json
+import inspect
 
 from django.views.generic import View
 from django.shortcuts import render
@@ -118,11 +119,7 @@ class DocContentView(View):
             if method == 'options' or not hasattr(view, method):
                 continue
 
-            doc_item = []
-            for i in getattr(view, method).__doc__.split('\n'):
-                doc_item.append(i[8:])
-
-            doc_content = '\n'.join(doc_item)
+            doc_content = inspect.getdoc(getattr(view, method))
             items.append({
                 'method': method.upper(),
                 'content': doc_content,

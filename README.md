@@ -28,7 +28,7 @@ Add `django_api_doc` to your INSTALLED_APPS setting.
 ```
 INSTALLED_APPS = (
     ...
-    'django-api-doc',
+    'django_api_doc',
 )
 ```
 
@@ -37,7 +37,7 @@ Now edit the your_project/urls.py module in your project:
 ```
 urlpatterns = [
     ...
-    url(r'^api-docs/', include('django-api-doc.urls', namespace='api_docs')),
+    url(r'^api-docs/', include('django_api_doc.urls', namespace='api_docs')),
 ]
 ```
 

@@ -28,7 +28,7 @@ python setup.py install
 ```
 INSTALLED_APPS = (
     ...
-    'django-api-doc',
+    'django_api_doc',
 )
 ```
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = (
 ```
 urlpatterns = [
     ...
-    url(r'^api-docs/', include('django-api-doc.urls', namespace='api_docs')),
+    url(r'^api-docs/', include('django_api_doc.urls', namespace='api_docs')),
 ]
 ```
 

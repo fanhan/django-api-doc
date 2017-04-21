@@ -93,6 +93,7 @@ class TestIndexView(View):
 #### 新增一些参数
 
 ```
-API_DOC_IGNORE_NAMESPACES = []   # 列表里的namespaces将不会生成文档
-API_DOC_TITLE = ''               # 文档的标题
+API_DOC_IGNORE_NAMESPACES = []              # 列表里的namespaces将不会生成文档
+API_DOC_TITLE = ''                          # 文档的标题
+API_DOC_API_DOMAIN = 'http://api.com'       # API域名
 ```

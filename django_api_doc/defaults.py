@@ -10,5 +10,7 @@ api_doc_title = 'Welcome to Django API Document'
 
 API_DOC_TITLE = getattr(settings, 'API_DOC_TITLE', api_doc_title)
 
+API_DOC_API_DOMAIN = getattr(settings, 'API_DOC_API_DOMAIN')
+
 
 

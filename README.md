@@ -94,6 +94,7 @@ then, open the url `http://127.0.0.1:8000/api-docs/`, you can see
 ## Add some parameters
 
 ```
-API_DOC_IGNORE_NAMESPACES = []   # ignore your_project/urls.py namespaces
-API_DOC_TITLE = ''               # doc html title
+API_DOC_IGNORE_NAMESPACES = []          # ignore your_project/urls.py namespaces
+API_DOC_TITLE = ''                      # doc html title
+API_DOC_API_DOMAIN = 'http://api.com'   # api domain
 ```

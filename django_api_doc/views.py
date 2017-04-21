@@ -10,7 +10,7 @@ from django.core import urlresolvers
 from django.core.urlresolvers import RegexURLPattern, reverse
 from django.http import Http404, HttpResponse
 
-from django_api_doc.utils import resolve_urls, get_url_pattern_by_name
+from django_api_doc.utils import resolve_urls, get_url_pattern_by_name, format_url
 from django_api_doc import defaults as settings
 
 
@@ -126,7 +126,7 @@ class DocContentView(View):
             })
 
         try:
-            url = reverse(url_name.replace('--', ':'))
+            url = reverse(url_name.replace('|', ':'))
         except Exception, e:
             ret = re.findall('(?:pattern\(s\) tried: \[)(.+)(?:\])', e.__str__())
             if ret:
@@ -136,7 +136,7 @@ class DocContentView(View):
 
         doc_content = {
             'title': view.__doc__ if view.__doc__ else view.__name__,
-            'url': url,
+            'url': format_url(url),
             'items': items,
         }
         return HttpResponse(content=json.dumps(doc_content), content_type='application/json')

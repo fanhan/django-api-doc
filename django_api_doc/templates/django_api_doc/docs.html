@@ -4,66 +4,109 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Django API Document</title>
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ doc_title }}</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% block style %}
         <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/bootstrap.min.css" %}"/>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/AdminLTE.min.css" %}"/>
+        <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
+            page. However, you can choose any other skin. Make sure you
+            apply the skin class to the body tag so the changes take effect.
+        -->
+        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/skins/skin-blue.min.css" %}"/>
         <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/style.css" %}"/>
     {% endblock %}
 </head>
 
 {% block body %}
-<body>
-    <div id="app">
-        <h2 class="doc-title">{[ doc_title ]}</h2>
-        <div class="sidebar span3">
-            <ul>
-                <li v-for="url_name in url_names">
-                    <a href="#!{[ url_name.key ]}">{[ url_name.name ]}</a>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper" id="app">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="index2.html" class="logo">
+              <!-- mini logo for sidebar mini 50x50 pixels -->
+              <span class="logo-mini">Doc</span>
+              <!-- logo for regular state and mobile devices -->
+              <span class="logo-lg"><b>API</b>Doc</span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+              <!-- Sidebar toggle button-->
+              <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+              </a>
+            </nav>
+        </header>
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <!-- Sidebar Menu -->
+              <ul class="sidebar-menu">
+                <li class="header">HEADER</li>
+                <!-- Optionally, you can add icons to the links -->
+                {% for url_name in url_names %}
+                <li>
+                    <a href="{{ doc_base_url }}{{ url_name.key }}">
+                        <i class="fa fa-link"></i>
+                        <span>{{ url_name.name }}</span>
+                    </a>
                 </li>
-            </ul>
-            <div class="accordion" id="namespace">
-                <div class="accordion-group" v-for="url_namespace in url_namespaces">
-                    <div class="accordion-heading">
-                        <b class="accordion-toggle" data-toggle="collapse" data-parent="#namespace">{[ url_namespace.name ]}</b>
-                    </div>
-                    <div id="{[ url_namespace.name ]}" class="accordion-body collapse in">
-                        <div class="accordion-inner">
-                            <ul>
-                                <li v-for="url_name in url_namespace.url_names">
-                                    <a href="#!{[ url_name.key ]}">{[ url_name.name ]}</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
+
+                {% for url_namespace in url_namespaces %}
+                <li class="treeview">
+                  <a href="#">
+                      <i class="fa fa-link"></i>
+                      <span>{{ url_namespace.name }}</span>
+                      <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    {% for url_name in url_namespace.url_names %}
+                    <li>
+                        <a href="{{ doc_base_url }}{{ url_name.key }}">{{ url_name.name }}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% endfor %}
+              </ul>
+            </section>
+        </aside>
+        <div class="content-wrapper">
+            {% if doc %}
+            <div class="content-header">
+                <h1>{{ doc.title }}</h1>
             </div>
-        </div>
-        <div class="span12">
-            <div class="content">
-                <router-view></router-view>
+            <div class="content body">
+                <h3>URL</h3>
+                <alert class="alert">{{ doc.url }}</alert>
+                {% for item in doc.items %}
+                    <section>
+                        <h3 class="page-header">
+                            <a href="#{{ item.method }}">{{ item.method }}</a>
+                        </h3>
+                        <div>{{ item.content|safe }}</div>
+                    </section>
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
+        <footer class="main-footer">
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2017 <a href="https://almsaeedstudio.com/">AdminLTE</a>.</strong>
+        </footer>
     </div>
-    <template id="doc-content">
-        <div v-if="doc">
-            <h2>{[ doc.title ]}</h2>
-            <p class="alert alert-info">{[ doc.url ]}</p>
-            <div v-for="item in doc.items">
-                <div class="method">
-                    <span>Method: </span>
-                    <span class="label label-info">{[ item.method ]}</span>
-                </div>
-                <pre class="doc" v-html=" item.content|marked ">
-                </pre>
-            </div>
-        </div>
-    </template>
-    <script src="{% static "django_api_doc/js/vue.min.js" %}"></script>
-    <script src="{% static "django_api_doc/js/vue-router.min.js" %}?v=2"></script>
-    <script src="{% static "django_api_doc/js/vue-resource.min.js" %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
-    <script src="{% static "django_api_doc/js/main.js" %}"></script>
+    <script src="{% static "django_api_doc/js/jquery-2.2.3.min.js" %}?v=2"></script>
+    <script src="{% static "django_api_doc/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "django_api_doc/js/app.min.js" %}"></script>
 </body>
 {% endblock %}
 </html>

@@ -22,6 +22,14 @@ new Vue({
         }, function (response) {
             alert('Error');
         })
+    },
+    methods: {
+        treeViewShow: function (e) {
+            console.log(e);
+            e.target.parentElement.classList.toggle('active');
+            // e.parents('.treeview').addClass('active');
+            // e.parents('.treeview').find('.treeview-menu').addClass('menu-open');
+        }
     }
 });
 

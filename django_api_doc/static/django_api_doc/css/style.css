@@ -1,50 +1,10 @@
-#app {
-    width: 1180px;
-    margin: 20px auto;
-}
-.sidebar {
-    background-color: #f0f0f0;
-    border-radius: 4px;
-}
-.sidebar .accordion {
-    margin: 20px;
-
-}
-.sidebar ul {
-    list-style-type: none;
-    margin: 5px 0;
-    padding: 0;
-}
-.sidebar ul li {
-    padding: 5px 25px;
-}
-.sidebar .active {
-    background-color: #2a85a0;
-}
-.sidebar .active a {
-    color: #fff;
-}
-.span3 {
-    margin-left: 0px;
-}
-
-.collapse.in {
-    height: auto;
-}
-.collapse {
-    position: relative;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition: height .35s ease;
-    -moz-transition: height .35s ease;
-    -o-transition: height .35s ease;
-    transition: height .35s ease;
+.content {
+    padding: 10px 25px;
 }
 
 table {
     margin-bottom: 5px;
     width: 100%;
-    background-color: transparent;
     border-spacing: 0;
     border: 1px solid #dddddd;
     border-collapse: separate;
@@ -93,11 +53,7 @@ pre.doc {
     border: 0;
     margin: 0;
     padding: 0;
-    background-color: #fff;
-}
-
-h4 {
-    margin: 0;
+    background-color: #ecf0f5;
 }
 
 pre code {
@@ -121,4 +77,18 @@ pre code {
     -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.065);
     -moz-box-shadow: 0 1px 4px rgba(0,0,0,0.065);
     box-shadow: 0 1px 4px rgba(0,0,0,0.065);
+}
+
+.page-header span, .page-header a {
+    z-index: 5;
+    display: block;
+    background-color: #ecf0f5;
+    color: #000;
+}
+
+.page-header span::before, .page-header a::before {
+    content: '#';
+    font-size: 25px;
+    margin-right: 10px;
+    color: #3c8dbc;
 }

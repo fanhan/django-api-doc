@@ -8,24 +8,24 @@
     <title>{{ doc_title }}</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     {% block style %}
-        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/bootstrap.min.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'django_api_doc/css/bootstrap.min.css' %}"/>
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
         <!-- Theme style -->
-        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/AdminLTE.min.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'django_api_doc/css/AdminLTE.min.css' %}"/>
         <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
             page. However, you can choose any other skin. Make sure you
             apply the skin class to the body tag so the changes take effect.
         -->
-        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/skins/skin-blue.min.css" %}"/>
-        <link rel="stylesheet" type="text/css" href="{% static "django_api_doc/css/style.css" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'django_api_doc/css/skins/'|add:skin|add:'.min.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'django_api_doc/css/style.css' %}"/>
     {% endblock %}
 </head>
 
 {% block body %}
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition {{ skin }} sidebar-mini">
     <div class="wrapper" id="app">
         <header class="main-header">
             <!-- Logo -->
@@ -104,9 +104,9 @@
             <strong>Copyright &copy; 2017 <a href="https://almsaeedstudio.com/">AdminLTE</a>.</strong>
         </footer>
     </div>
-    <script src="{% static "django_api_doc/js/jquery-2.2.3.min.js" %}?v=2"></script>
-    <script src="{% static "django_api_doc/js/bootstrap.min.js" %}"></script>
-    <script src="{% static "django_api_doc/js/app.min.js" %}"></script>
+    <script src="{% static 'django_api_doc/js/jquery-2.2.3.min.js' %}"></script>
+    <script src="{% static 'django_api_doc/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'django_api_doc/js/app.min.js' %}"></script>
 </body>
 {% endblock %}
 </html>

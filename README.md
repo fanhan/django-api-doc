@@ -88,8 +88,8 @@ class TestIndexView(View):
         pass
 ```
 
-then, open the url `http://127.0.0.1:8000/api-docs/`, you can see 
-
+then, open the url `http://127.0.0.1:8000/api-docs/`, you can see like this
+![api_doc_image](https://raw.githubusercontent.com/fanhan/django-api-doc/master/test/api_doc_test.png)
 
 ## Add some parameters
 
@@ -97,4 +97,5 @@ then, open the url `http://127.0.0.1:8000/api-docs/`, you can see
 API_DOC_IGNORE_NAMESPACES = []          # ignore your_project/urls.py namespaces
 API_DOC_TITLE = ''                      # doc html title
 API_DOC_API_DOMAIN = 'http://api.com'   # api domain
+API_DOC_SKIN = 'skin-blue'              # skin-blue skin-black skin-purple skin-yellow skin-red skin-green 
 ```

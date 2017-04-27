@@ -87,7 +87,9 @@ class TestIndexView(View):
         pass
 ```
 
-浏览器打开 `http://127.0.0.1:8000/api-docs/`就可以看到文档目录了
+浏览器打开 `http://127.0.0.1:8000/api-docs/`就可以看到文档目录了, 例如：
+
+![api_doc_image](https://raw.githubusercontent.com/fanhan/django-api-doc/master/test/api_doc_test.png)
 
 
 #### 新增一些参数
@@ -96,4 +98,5 @@ class TestIndexView(View):
 API_DOC_IGNORE_NAMESPACES = []              # 列表里的namespaces将不会生成文档
 API_DOC_TITLE = ''                          # 文档的标题
 API_DOC_API_DOMAIN = 'http://api.com'       # API域名
+API_DOC_SKIN = 'skin-blue'                  # skin-blue skin-black skin-purple skin-yellow skin-red skin-green 
 ```

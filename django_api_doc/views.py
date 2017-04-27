@@ -60,6 +60,7 @@ class APIDocView(View):
             'url_names': [],
             'doc_title': settings.API_DOC_TITLE,
             'doc_base_url': doc_base_url,
+            'skin': settings.API_DOC_SKIN,
         }
 
         # get all name and namespace by url conf

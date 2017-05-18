@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import re
 import inspect
-from urllib import unquote
 import markdown
+
 from django.utils.encoding import smart_str
 
 from django.views.generic import View
@@ -13,6 +14,11 @@ from django.core.urlresolvers import RegexURLPattern, reverse
 
 from django_api_doc.utils import resolve_urls, get_url_pattern_by_name, format_url
 from django_api_doc import defaults as settings
+
+if sys.version_info < (3, 0):
+    from urllib import unquote
+else:
+    from urllib.parse import unquote
 
 
 class APIDocView(View):
@@ -30,7 +36,12 @@ class APIDocView(View):
             if method == 'options' or not hasattr(view, method):
                 continue
 
-            doc_content = smart_str(inspect.getdoc(getattr(view, method))).decode('utf-8')
+            # difference of py2 and py3
+            if sys.version_info < (3, 0):
+                doc_content = smart_str(inspect.getdoc(getattr(view, method))).decode('utf-8')
+            else:
+                doc_content = smart_str(inspect.getdoc(getattr(view, method)))
+
             if doc_content:
                 doc_content = markdown.markdown(doc_content, ['tables', 'attr_list'], safe_mode='escape')
             items.append({
@@ -40,7 +51,7 @@ class APIDocView(View):
 
         try:
             url = reverse(url_name.replace('|', ':'))
-        except Exception, e:
+        except Exception as e:
             ret = re.findall('(?:pattern\(s\) tried: \[)(.+)(?:\])', e.__str__())
             if ret:
                 url = ret[0]
